@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>template-provider | Developer Hub</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Outfit:wght@600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+
+    <!-- Navigation Bar -->
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="logo">
+            <a href="#"> template-provider</a>
+        </div>
+        <ul>
+            <li><a href="#Documentation">Documentation</a></li>
+            <li><a href="#Version">Version Portal</a></li>
+
+        </ul>
+
+        <a href="https://github.com/keshavsoft/template-provider" target="_blank" rel="noopener noreferrer"
+            class="btn-github">
+            <svg height="16" width="16" viewBox="0 0 16 16" fill="currentColor">
+                <path
+                    d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+                </path>
+            </svg>
+            GitHub
+        </a>
+    </nav>
+
+    <main>
+        <!-- Overview Section -->
+        <section class="section-block">
+            <div class="section-header">
+                <h2>📖 Overview</h2>
+            </div>
+            <p><code>template-provider</code> is a lightweight developer utility that automatically generates and
+                updates
+                Express.js routing files.</p>
+            <p style="margin-top: 8px;">It safely inserts router imports, endpoint methods, version routes, and table
+                routes
+                while preventing code generation errors.</p>
+            <p style="margin-top: 8px;">The project serves as one of the core building blocks of the <strong>KeshavSoft
+                    API
+                    Generation Suite</strong>, enabling CLI tools and VS Code extensions to scaffold Express APIs with
+                minimal
+                effort.</p>
+        </section>
+
+        <!-- Features Section -->
+        <section class="section-block" id="Features">
+            <div class="section-header">
+                <h2>✨ Features</h2>
+            </div>
+            <div class="features-grid">
+                <div class="feature-item">✅ Automatic Express route generation</div>
+                <div class="feature-item">✅ Safe duplicate prevention (Idempotent)</div>
+                <div class="feature-item">✅ Generates router imports automatically</div>
+                <div class="feature-item">✅ Creates version routing (/v1, /v2, ...)</div>
+                <div class="feature-item">✅ Creates table routing (/customers, /doctors, ...)</div>
+                <div class="feature-item">✅ Generates GET, POST, PUT and DELETE endpoints</div>
+                <div class="feature-item">✅ Maintains clean route formatting</div>
+                <div class="feature-item">✅ Supports multiple generator versions</div>
+            </div>
+        </section>
+
+        <!-- Generation Flow Section -->
+        <section class="section-block">
+            <div class="section-header">
+                <h2>🚀 Generation Flow</h2>
+                <p>How template-provider processes and scaffolds your Express APIs step-by-step.</p>
+            </div>
+
+            <div class="simulator-container">
+                <div class="sim-panel">
+                    <h3>Workflow Visual</h3>
+                    <div class="code-preview">Run Generator
+                        │
+                        ▼
+                        Generate App.js
+                        │
+                        ▼
+                        Generate Version Routes
+                        │
+                        ▼
+                        Generate Table Routes
+                        │
+                        ▼
+                        Generate Endpoint Methods
+                        │
+                        ▼
+                        Ready-to-Use Express APIs</div>
+                </div>
+
+                <div class="sim-panel">
+                    <h3>Modules Summary</h3>
+                    <div class="form-group">
+                        <label>1. App.js Generator</label>
+                        <input type="text" readonly value="Path: Api/ (Generates app.use & imports)">
+                    </div>
+                    <div class="form-group">
+                        <label>2. Version Route Generator</label>
+                        <input type="text" readonly value="Path: Api/v1/ (Generates /v1 routes)">
+                    </div>
+                    <div class="form-group">
+                        <label>3. Table Route Generator</label>
+                        <input type="text" readonly value="Path: Api/v1/Doctors (Generates table routes)">
+                    </div>
+                    <div class="form-group">
+                        <label>4. Endpoint Generator</label>
+                        <input type="text" readonly value="Path: Api/v1/Doctors (Generates GET, POST, PUT, DELETE)">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-block" id="Documentation">
+            <div class="section-header">
+                <h2>🌐 Documentation</h2>
+            </div>
+            <div class="features-grid">
+                <a href="./app-generator.html">
+                    <div class="feature-item">✅ App.js Route Generation</div>
+                </a>
+                <a href="./version-generator.html">
+                    <div class="feature-item">✅ Version Route Generation</div>
+                </a>
+                <a href="./table-generator.html">
+                    <div class="feature-item">✅ Table Route Generation</div>
+                </a>
+                <a href="./endpoint-generator.html">
+                    <div class="feature-item">✅ End Points Generation</div>
+                </a>
+
+            </div>
+        </section>
+        <section class="section-block" id="DocumentationPortal">
+            <div class="section-header">
+                <h2>🌐 Documentation Portal</h2>
+                <p style="margin-top: 4px;">Access complete guides, API specs, and generators</p>
+
+            </div>
+            <div class="docs-list">
+                <a href="https://keshavsoft.github.io/template-provider/" target="_blank" rel="noopener noreferrer"
+                    class="doc-link">
+                    📘 Visit Docs Portal
+                </a>
+                <a href="https://github.com/keshavsoft/template-provider" target="_blank" rel="noopener noreferrer"
+                    class="doc-link">
+                    ⭐ View on GitHub
+                </a>
+
+            </div>
+
+        </section>
+        <section class="section-block" id="Version">
+            <div class="section-header">
+                <h2>🌐 Version Portal</h2>
+                <p style="margin-top: 4px;">Access version wise updated code</p>
+
+            </div>
+            <div class="docs-list">
+                <a href="./v1/index.html" target="_blank" rel="noopener noreferrer" class="doc-link">
+                    Version V1
+                </a>
+                <a href="./v2/index.html" target="_blank" rel="noopener noreferrer" class="doc-link">
+                    Version V2
+                </a>
+                <a href="./v3/index.html" target="_blank" rel="noopener noreferrer" class="doc-link">
+                    Version V3
+                </a>
+                <ul>
+
+                </ul>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>Developed and maintained with ❤️ by <strong>KeshavSoft</strong></p>
+        <p style="margin-top: 4px;">Released under the <strong>MIT License</strong></p>
+    </footer>
+
+</body>
+
+</html>

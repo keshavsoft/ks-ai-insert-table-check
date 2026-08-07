@@ -1,0 +1,36 @@
+{
+  "name": "ks-ai-insert-table-check",
+  "version": "1.2.1",
+  "description": "CLI to build for appjs, the endpoints",
+  "keywords": [
+    "cli",
+    "scaffold",
+    "templates",
+    "node",
+    "project-generator"
+  ],
+  "dependencies": {
+    "pattern-collector-base-files": "^1.3.1"
+  },
+  "type": "module",
+  "exports": {
+    ".": "./index.js"
+  },
+  "bin": {
+    "ks-ai-insert-table-check": "./bin/cli.js"
+  },
+  "files": [
+    "bin/",
+    "index.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "homepage": "https://cli.keshavsoft.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/keshavsoft/ks-ai-insert-table-check"
+  },
+  "bugs": {
+    "url": "https://github.com/keshavsoft/ks-ai-insert-table-check/issues"
+  }
+}

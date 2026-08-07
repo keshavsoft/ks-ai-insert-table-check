@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>template-provider</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+
+    <h1>template-provider 🚀</h1>
+
+    <blockquote>
+        <p><strong>Automatically generate, update, and organize Express.js routing files with safe, idempotent code generation.</strong></p>
+    </blockquote>
+
+    <div class="badge-container">
+        <a href="https://www.npmjs.com/package/template-provider"><img src="https://img.shields.io/npm/v/template-provider.svg?style=flat-square" alt="npm version"></a>
+        <a href="LICENSE"><img src="https://img.shields.io/npm/l/template-provider.svg?style=flat-square" alt="License"></a>
+    </div>
+
+    <hr>
+
+    <h2>📖 Overview</h2>
+    <p><code>template-provider</code> is a lightweight developer utility that automatically generates and updates Express.js routing files.</p>
+    <p>It safely inserts router imports, endpoint methods, version routes, and table routes while preventing duplicate code generation.</p>
+    <p>The project serves as one of the core building blocks of the <strong>KeshavSoft API Generation Suite</strong>, enabling CLI tools and VS Code extensions to scaffold Express APIs with minimal effort.</p>
+
+    <hr>
+
+    <h2>✨ Features</h2>
+    <ul>
+        <li>✅ Automatic Express route generation</li>
+        <li>✅ Safe duplicate prevention (Idempotent)</li>
+        <li>✅ Generates router imports automatically</li>
+        <li>✅ Generates GET, POST, PUT and DELETE endpoints</li>
+        <li>✅ Creates version routing (<code>/v1</code>, <code>/v2</code>, ...)</li>
+        <li>✅ Creates table routing (<code>/customers</code>, <code>/doctors</code>, ...)</li>
+        <li>✅ Maintains clean route formatting</li>
+        <li>✅ Supports multiple generator versions</li>
+    </ul>
+
+    <hr>
+
+    <h2>📂 Project Structure</h2>
+    <pre><code>test/
+└── v10
+    ├── fromAppJs
+    ├── fromEndPointsJs
+    ├── fromRoutesJs
+    └── fromRoutesJsEnd</code></pre>
+    <p>Each folder demonstrates a different stage of Express route generation.</p>
+
+    <hr>
+
+    <h2>🚀 Generation Flow</h2>
+    <pre><code>Run Generator
+      │
+      ▼
+Generate App.js
+      │
+      ▼
+Generate Version Routes
+      │
+      ▼
+Generate Table Routes
+      │
+      ▼
+Generate Endpoint Methods
+      │
+      ▼
+Ready-to-Use Express APIs</code></pre>
+
+    <hr>
+
+    <h2>📄 Module Overview</h2>
+
+    <h3>1. App.js Generator</h3>
+    <p><strong>Folder</strong></p>
+    <pre><code>test/v10/fromAppJs</code></pre>
+    <h4>Purpose</h4>
+    <p>Automatically updates <strong>app.js</strong>.</p>
+    <h4>Generates</h4>
+    <ul>
+        <li>Router imports</li>
+        <li>app.use() registrations</li>
+        <li>API router configuration</li>
+    </ul>
+    <p>Example</p>
+    <pre><code class="language-javascript">import { router as routerFromApi } from "./api/routes.js";
+
+app.use("/api", routerFromApi);</code></pre>
+
+    <h3>2. Endpoint Generator</h3>
+    <p><strong>Folder</strong></p>
+    <pre><code>test/v10/fromEndPointsJs</code></pre>
+    <h4>Purpose</h4>
+    <p>Creates endpoint methods for Express routers.</p>
+    <h4>Generates</h4>
+    <ul>
+        <li>GET</li>
+        <li>POST</li>
+        <li>PUT</li>
+        <li>DELETE</li>
+    </ul>
+    <p>Example</p>
+    <pre><code class="language-javascript">router.get("/showAll", handler);
+
+router.post("/insert", handler);</code></pre>
+
+    <h3>3. Version Route Generator</h3>
+    <p><strong>Folder</strong></p>
+    <pre><code>test/v10/fromRoutesJs</code></pre>
+    <h4>Purpose</h4>
+    <p>Creates version-based routing.</p>
+    <p>Example</p>
+    <pre><code class="language-javascript">router.use("/v1", routerFromV1);</code></pre>
+    <p>Generated</p>
+    <pre><code>/api
+   └── /v1</code></pre>
+
+    <h3>4. Table Route Generator</h3>
+    <p><strong>Folder</strong></p>
+    <pre><code>test/v10/fromRoutesJsEnd</code></pre>
+    <h4>Purpose</h4>
+    <p>Creates routes based on schema table names.</p>
+    <p>Example</p>
+    <pre><code>Doctors</code></pre>
+    <p>Generated</p>
+    <pre><code class="language-javascript">router.use("/doctors", routerFromDoctors);</code></pre>
+    <p>Result</p>
+    <pre><code>/api
+   └── /v1
+          ├── /doctors
+          ├── /patients
+          └── ...</code></pre>
+
+    <hr>
+
+    <h2>📦 Installation</h2>
+    <pre><code class="language-bash">npm install template-provider</code></pre>
+
+    <hr>
+
+    <h2>🌐 Documentation</h2>
+    <p>Complete documentation is available here:</p>
+    <p><strong>Documentation Portal</strong></p>
+    <p><a href="https://keshavsoft.github.io/template-provider/">https://keshavsoft.github.io/template-provider/</a></p>
+    <p>The documentation includes:</p>
+    <ul>
+        <li>📄 App.js Generation</li>
+        <li>📄 Endpoint Generation</li>
+        <li>📄 Version Route Generation</li>
+        <li>📄 Table Route Generation</li>
+        <li>📄 Developer Guides</li>
+        <li>📄 Architecture</li>
+        <li>📄 Examples</li>
+    </ul>
+
+    <hr>
+
+    <h2>❤️ Maintainer</h2>
+    <p>Developed and maintained by <strong>KeshavSoft</strong></p>
+    <p>GitHub: <a href="https://github.com/keshavsoft">https://github.com/keshavsoft</a></p>
+
+    <hr>
+
+    <h2>📄 License</h2>
+    <p>MIT License</p>
+
+</body>
+</html>

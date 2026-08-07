@@ -1,0 +1,6 @@
+{
+    "fromAppJs": "app.js",
+    "fromRoutesJs": "routes.js",
+    "fromRoutesJsEnd": "routes.js",
+    "fromEndPointsJs": "end-points.js"
+}

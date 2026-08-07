@@ -1,0 +1,109 @@
+name: Update dependency
+
+on:
+  repository_dispatch:
+    types: [dependency-updated]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.check.outputs.changed }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.REPO_DISPATCH_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Save Before Version
+        id: before
+        run: |
+          BEFORE_VERSION=$(node -p "require('./package.json').version")
+          echo "version=${BEFORE_VERSION}" >> $GITHUB_OUTPUT
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Update dependency
+        run: |
+          PACKAGE_NAME="${{ github.event.client_payload.package }}"
+          if [ -n "$PACKAGE_NAME" ]; then
+            echo "Updating package: $PACKAGE_NAME"
+            npm install ${PACKAGE_NAME}@latest
+          else
+            echo "No package specified, updating default dependency express-fix-any-js..."
+            npm install express-fix-any-js@latest
+          fi
+
+      - name: Check for updates
+        id: check
+        run: |
+          if ! git diff --quiet package.json package-lock.json; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and push changes
+        if: steps.check.outputs.changed == 'true'
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          npm version patch --no-git-tag-version
+          git add package.json package-lock.json
+          git commit -m "chore(deps): update dependency to latest [skip ci]"
+          git push origin HEAD:main
+
+      - name: Publish to NPM
+        if: steps.check.outputs.changed == 'true'
+        run: |
+          PACKAGE_NAME=$(node -p "require('./package.json').name")
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          if npm view "${PACKAGE_NAME}@${PACKAGE_VERSION}" version >/dev/null 2>&1; then
+            echo "Version ${PACKAGE_VERSION} is already published; skipping NPM publish"
+          else
+            npm publish
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Generate Summary
+        if: always()
+        run: |
+          echo "### 🔄 Dependency Update Summary" >> $GITHUB_STEP_SUMMARY
+          echo "* **Repository**: [${{ github.repository }}](https://github.com/${{ github.repository }})" >> $GITHUB_STEP_SUMMARY
+          echo "* **Status**: ${{ job.status }} ✅" >> $GITHUB_STEP_SUMMARY
+          echo "* **Changes Detected & Pushed**: \`${{ steps.check.outputs.changed || 'false' }}\`" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ steps.check.outputs.changed }}" = "true" ]; then
+            PACKAGE_NAME=$(node -p "require('./package.json').name")
+            AFTER_VERSION=$(node -p "require('./package.json').version")
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### 🚀 NPM Publication Summary" >> $GITHUB_STEP_SUMMARY
+            echo "* **Package**: \`${PACKAGE_NAME}\`" >> $GITHUB_STEP_SUMMARY
+            echo "* **Git Repository**: [${{ github.repository }}](https://github.com/${{ github.repository }})" >> $GITHUB_STEP_SUMMARY
+            echo "* **Before Publish Version**: \`${{ steps.before.outputs.version }}\`" >> $GITHUB_STEP_SUMMARY
+            echo "* **After Publish Version**: \`${AFTER_VERSION}\`" >> $GITHUB_STEP_SUMMARY
+            echo "* **Status**: ✅ Successfully Published to NPM" >> $GITHUB_STEP_SUMMARY
+            echo "* **Registry Link**: [npm Link](https://www.npmjs.com/package/${PACKAGE_NAME})" >> $GITHUB_STEP_SUMMARY
+          fi
+
+  notify-dependents:
+    needs: update
+    if: always() && needs.update.outputs.changed == 'true' && needs.update.result == 'success'
+    uses: ./.github/workflows/notify.yml
+    with:
+      package_name: "template-provider-with-discovery"
+      repositories: "keshavsoft/vs-code-ext-from-any-js"
+    secrets:
+      REPO_DISPATCH_TOKEN: ${{ secrets.REPO_DISPATCH_TOKEN }}
