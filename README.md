@@ -1,108 +1,119 @@
-# template-provider 🚀
+# ks-ai-insert-table-check 🚀
 
-> **Automatically generate, update, and organize Express.js routing files with safe, idempotent code generation.**
+> **A CLI and SDK utility for verifying the existence of target routing files before performing table insertions or scaffolding in Express.js.**
 
-[![npm version](https://img.shields.io/npm/v/template-provider.svg?style=flat-square)](https://www.npmjs.com/package/template-provider)
-[![License](https://img.shields.io/npm/l/template-provider.svg?style=flat-square)](LICENSE)
-
----
-
-# 📖 Overview
-
-`template-provider` is a lightweight developer utility that automatically generates and updates Express.js routing files.
-
-It safely inserts router imports, endpoint methods, version routes, and table routes while preventing duplicate code generation.
-
-The project serves as one of the core building blocks of the **KeshavSoft API Generation Suite**, enabling CLI tools and VS Code extensions to scaffold Express APIs with minimal effort.
+[![npm version](https://img.shields.io/npm/v/ks-ai-insert-table-check.svg?style=flat-square)](https://www.npmjs.com/package/ks-ai-insert-table-check)
+[![License](https://img.shields.io/npm/l/ks-ai-insert-table-check.svg?style=flat-square)](LICENSE)
 
 ---
 
+## 📖 Overview
 
-# 📂 Project Structure
+`ks-ai-insert-table-check` is a lightweight developer utility and SDK that checks if required routing files (specifically `routes.js`) exist in a target directory. It is designed to act as a pre-check validator for code generators and scaffolding tools, ensuring a safe workspace environment before attempting to insert new table routes or endpoints.
 
-
-Each folder demonstrates a different stage of Express route generation.
-
----
-
-# 🚀 Generation Flow
+This project is a core building block of the **KeshavSoft API Generation Suite**, enabling CLI generators and VS Code extensions to verify local file environments with minimal effort.
 
 ---
 
-## 1. App.js Generator
+## 📂 Versioning & Support
 
-The journey of every API begins with app.js. Rather than manually wiring routers every time, the App.js Generator automatically connects them for you. It safely inserts imports and route registrations without creating duplicates, ensuring your application is always organized and ready to grow.
-
-### Purpose
-
-Automatically updates **app.js**.
-
-### Generates
-
-- Router imports
-- app.use() registrations
-- API router configuration
-
-
-
-## 2. Version Route Generator
-
-Great APIs grow over time, and so do their versions. The Version Route Generator automatically organizes routes into version folders like /v1 and /v2, making your API clean, scalable, and easy to maintain.
-
-
-### Purpose
-
-Creates version-based routing.
+- **v3 (Latest)**: Resolves routing files based on configurations provided by `pattern-collector-base-files` (specifically looking up the `fromRoutesJsEnd` structure) and returns an execution result format.
 
 ---
 
-## 3. Table Route Generator
-Every table deserves its own route. The Table Route Generator automatically creates routes from your schema, connecting tables like Customers, Doctors, and Products into a clean, scalable Express API structure with minimal effort.
+## 🚀 Execution Flow
 
-
-### Purpose
-
-Creates routes based on schema table names.
-
----
-## 4. Endpoint Generator
-
-An API is only useful when it can perform actions. The Endpoint Generator automatically creates Express endpoint methods for GET, POST, PUT, and DELETE, giving you a clean starting point for every new route while avoiding repetitive code.
-
-
-### Purpose
-
-Creates endpoint methods for Express routers.
-
----
-
-# 📦 Installation
-
-```bash
-npm install template-provider
+```text
+Run CLI / SDK Check
+        │
+        ▼
+Resolve target paths from pattern-collector-base-files config
+        │
+        ▼
+Verify if routes.js file exists in target path
+        │
+        ▼
+Return JSON check payload (e.g. { KTF: true, KReason: "..." })
 ```
 
 ---
 
-# 🌐 Documentation
+## 📦 Installation
 
-Complete documentation is available here:
+To install globally or locally in your project:
 
-**Documentation Portal**
-
-https://keshavsoft.github.io/template-provider/
-
----
-
-# ❤️ Maintainer
-
-Developed and maintained by **KeshavSoft**
-
-GitHub:
-https://github.com/keshavsoft
+```bash
+npm install ks-ai-insert-table-check
+```
 
 ---
 
-# 📄 License
+## 💻 CLI Usage
+
+Run the checker from your terminal using:
+
+```bash
+npx ks-ai-insert-table-check <raka> <poka> [toPath]
+```
+
+### Arguments
+
+* **`raka`** - Value used for mapping.
+* **`poka`** - Value used for naming/validation.
+* **`toPath`** - *(Optional)* Target path to inspect (defaults to the current working directory).
+
+### Options
+
+* **`-h`, `--help`** - Show help message and usage instructions.
+* **`-v`, `--version`** - Show CLI version.
+
+### Example
+
+```bash
+npx ks-ai-insert-table-check purchases pokaValue ./test/v3
+```
+
+#### Output (JSON)
+
+```json
+{
+  "KTF": true,
+  "KReason": "file found : D:\\projects\\test\\v3\\routes.js"
+}
+```
+
+---
+
+## ⚙️ SDK Usage
+
+You can also import `ks-ai-insert-table-check` programmatically in Node.js:
+
+```javascript
+import runCheck from "ks-ai-insert-table-check";
+
+const targetPath = "./src/routes";
+const result = runCheck(targetPath);
+
+console.log(result);
+/*
+Output:
+{
+  "KTF": true,
+  "KReason": "file found : D:\\projects\\src\\routes\\routes.js"
+}
+*/
+```
+
+---
+
+## ❤️ Maintainer
+
+Developed and maintained with ❤️ by **KeshavSoft**
+
+- GitHub: [keshavsoft](https://github.com/keshavsoft)
+
+---
+
+## 📄 License
 
 MIT License
