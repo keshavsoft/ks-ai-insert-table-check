@@ -14,10 +14,10 @@ const pkg = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "package.json"
 const showHelp = (version, isV4OrLater) => {
     if (isV4OrLater) {
         console.log(`
-template-provider-with-discovery CLI v${version}
+ks-ai-insert-table-check CLI v${version}
 
 Usage:
-  npx template-provider-with-discovery <tableName> [toPath]
+  npx ks-ai-insert-table-check <tableName> [toPath]
 
 Arguments:
   tableName       Name of the table to insert / configure
@@ -30,10 +30,10 @@ Options:
 `);
     } else {
         console.log(`
-template-provider-with-discovery CLI v${version}
+ks-ai-insert-table-check CLI v${version}
 
 Usage:
-  npx template-provider-with-discovery <raka> <poka> [toPath]
+  npx ks-ai-insert-table-check <raka> <poka> [toPath]
 
 Arguments:
   raka            Value to use for configuration mapping (e.g. folderName)

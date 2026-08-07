@@ -17,7 +17,7 @@ This project is a core building block of the **KeshavSoft API Generation Suite**
 
 ## 📂 Versioning & Support
 
-- **v3 (Latest)**: Resolves routing files based on configurations provided by `pattern-collector-base-files` (specifically looking up the `fromRoutesJsEnd` structure) and returns an execution result format.
+- **v4 (Latest)**: Resolves routing files based on configurations provided by `pattern-collector-base-files` (specifically looking up the `fromRoutesJsEnd` structure) and returns an execution validation result payload.
 
 ---
 
@@ -53,13 +53,12 @@ npm install ks-ai-insert-table-check
 Run the checker from your terminal using:
 
 ```bash
-npx ks-ai-insert-table-check <raka> <poka> [toPath]
+npx ks-ai-insert-table-check <tableName> [toPath]
 ```
 
 ### Arguments
 
-* **`raka`** - Value used for mapping.
-* **`poka`** - Value used for naming/validation.
+* **`tableName`** - Name of the table or key mapping to validate.
 * **`toPath`** - *(Optional)* Target path to inspect (defaults to the current working directory).
 
 ### Options
@@ -70,7 +69,7 @@ npx ks-ai-insert-table-check <raka> <poka> [toPath]
 ### Example
 
 ```bash
-npx ks-ai-insert-table-check purchases pokaValue ./test/v3
+npx ks-ai-insert-table-check purchases ./test/v4
 ```
 
 #### Output (JSON)
@@ -78,7 +77,7 @@ npx ks-ai-insert-table-check purchases pokaValue ./test/v3
 ```json
 {
   "KTF": true,
-  "KReason": "file found : D:\\projects\\test\\v3\\routes.js"
+  "KReason": "file found : D:\\projects\\test\\v4\\routes.js"
 }
 ```
 
