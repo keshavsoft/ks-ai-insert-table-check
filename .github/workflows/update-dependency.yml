@@ -103,7 +103,7 @@ jobs:
     if: always() && needs.update.outputs.changed == 'true' && needs.update.result == 'success'
     uses: ./.github/workflows/notify.yml
     with:
-      package_name: "template-provider-with-discovery"
-      repositories: "keshavsoft/vs-code-ext-from-any-js"
+      package_name: "ks-ai-insert-table-check"
+      repositories: "keshavsoft/vs-code-ext-from-any-js,keshavsoft/ks-ai-insert-table"
     secrets:
       REPO_DISPATCH_TOKEN: ${{ secrets.REPO_DISPATCH_TOKEN }}

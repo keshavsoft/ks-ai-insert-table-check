@@ -43,6 +43,6 @@ jobs:
     uses: ./.github/workflows/notify.yml
     with:
       package_name: ${{ needs.check-version.outputs.package_name }}
-      repositories: "keshavsoft/vs-code-ext-from-any-js"
+      repositories: "keshavsoft/vs-code-ext-from-any-js,keshavsoft/ks-ai-insert-table"
     secrets:
       REPO_DISPATCH_TOKEN: ${{ secrets.REPO_DISPATCH_TOKEN }}
