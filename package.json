@@ -1,6 +1,6 @@
 {
   "name": "ks-ai-insert-table-check",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "CLI to build for appjs, the endpoints",
   "keywords": [
     "cli",
