@@ -7,38 +7,42 @@ permissions:
   contents: write
 
 jobs:
-  publish:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+  check-version:
+    uses: ./.github/workflows/npm-check.yml
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          registry-url: 'https://registry.npmjs.org'
+  publish-pkg:
+    needs: check-version
+    if: needs.check-version.outputs.already_published == 'false'
+    uses: ./.github/workflows/npm-publish-reusable.yml
+    secrets:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Install dependencies
-        run: npm install
+  summary-skipped:
+    needs: check-version
+    if: needs.check-version.outputs.already_published == 'true'
+    uses: ./.github/workflows/npm-summary.yml
+    with:
+      package_name: ${{ needs.check-version.outputs.package_name }}
+      before_version: ${{ needs.check-version.outputs.before_version }}
+      after_version: ${{ needs.check-version.outputs.before_version }}
+      status: "⚠️ Skipped (Version ${{ needs.check-version.outputs.package_version }} is already published on NPM)"
 
-      - name: Publish to NPM
-        run: |
-          PACKAGE_NAME=$(node -p "require('./package.json').name")
-          PACKAGE_VERSION=$(node -p "require('./package.json').version")
-          if npm view "${PACKAGE_NAME}@${PACKAGE_VERSION}" version >/dev/null 2>&1; then
-            echo "Version ${PACKAGE_VERSION} is already published; skipping NPM publish"
-          else
-            npm publish
-          fi
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+  summary-published:
+    needs: [check-version, publish-pkg]
+    if: always() && needs.check-version.outputs.already_published == 'false' && needs.publish-pkg.result == 'success'
+    uses: ./.github/workflows/npm-summary.yml
+    with:
+      package_name: ${{ needs.check-version.outputs.package_name }}
+      before_version: ${{ needs.check-version.outputs.before_version }}
+      after_version: ${{ needs.check-version.outputs.package_version }}
+      status: "✅ Successfully Published to NPM"
 
-  notify:
-    needs: publish
+  notify-dependents:
+    needs: [check-version, publish-pkg]
+    if: always() && needs.check-version.outputs.already_published == 'false' && needs.publish-pkg.result == 'success'
     uses: ./.github/workflows/notify.yml
     with:
-      package_name: "ks-ai-insert-table-check"
+      package_name: ${{ needs.check-version.outputs.package_name }}
       repositories: "keshavsoft/vs-code-ext-from-any-js,keshavsoft/ks-ai-insert-table"
     secrets:
       REPO_DISPATCH_TOKEN: ${{ secrets.REPO_DISPATCH_TOKEN }}
