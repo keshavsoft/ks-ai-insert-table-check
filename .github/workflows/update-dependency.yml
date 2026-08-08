@@ -62,11 +62,16 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Create Summary
+        if: always()
         run: |
           echo "### 🔄 Dependency Update Summary" >> $GITHUB_STEP_SUMMARY
           echo "* **Repository**: [${{ github.repository }}](https://github.com/${{ github.repository }})" >> $GITHUB_STEP_SUMMARY
-          echo "* **Status**: ✅ Dependency update checked/run successfully" >> $GITHUB_STEP_SUMMARY
-          echo "* **Changes Pushed**: \`${{ steps.git-push.outputs.has_changes }}\`" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ job.status }}" = "success" ]; then
+            echo "* **Status**: ✅ Dependency update checked and run successfully" >> $GITHUB_STEP_SUMMARY
+            echo "* **Changes Pushed**: \`${{ steps.git-push.outputs.has_changes }}\`" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "* **Status**: ❌ Dependency update failed" >> $GITHUB_STEP_SUMMARY
+          fi
 
   notify-dependents:
     needs: update-dependency
