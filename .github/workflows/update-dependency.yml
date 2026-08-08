@@ -1,0 +1,97 @@
+name: Update Dependency
+
+on:
+  repository_dispatch:
+    types: [dependency-updated]
+  workflow_dispatch:
+
+concurrency:
+  group: update-dependency-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  update-dependency:
+    runs-on: ubuntu-latest
+    outputs:
+      has_changes: ${{ steps.git-push.outputs.has_changes }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.REPO_DISPATCH_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Update dependencies
+        run: |
+          npm install pattern-collector-base-files@latest
+
+      - name: Commit and push changes
+        id: git-push
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add package.json package-lock.json
+          if git diff-index --quiet HEAD; then
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          else
+            npm version patch --no-git-tag-version
+            git add package.json package-lock.json
+            git commit -m "chore: update dependencies and bump version"
+            git push origin main
+            PACKAGE_NAME=$(node -p "JSON.parse(require('fs').readFileSync('package.json', 'utf8')).name")
+            PACKAGE_VERSION=$(node -p "JSON.parse(require('fs').readFileSync('package.json', 'utf8')).version")
+            if npm view "$PACKAGE_NAME@$PACKAGE_VERSION" version >/dev/null 2>&1; then
+              echo "$PACKAGE_NAME@$PACKAGE_VERSION is already published; skipping npm publish"
+            else
+              npm publish
+            fi
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Create Summary
+        run: |
+          echo "### 🔄 Dependency Update Summary" >> $GITHUB_STEP_SUMMARY
+          echo "* **Repository**: [${{ github.repository }}](https://github.com/${{ github.repository }})" >> $GITHUB_STEP_SUMMARY
+          echo "* **Status**: ✅ Dependency update checked/run successfully" >> $GITHUB_STEP_SUMMARY
+          echo "* **Changes Pushed**: \`${{ steps.git-push.outputs.has_changes }}\`" >> $GITHUB_STEP_SUMMARY
+
+  notify-dependents:
+    needs: update-dependency
+    if: needs.update-dependency.outputs.has_changes == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for NPM replication
+        run: sleep 15
+
+      - name: Notify dependents
+        run: |
+          echo "### 🔔 Dependency Notification Status" >> $GITHUB_STEP_SUMMARY
+          REPOS="keshavsoft/vs-code-ext-from-any-js,keshavsoft/ks-ai-insert-table"
+          for REPO in $(echo "$REPOS" | tr ',' ' '); do
+            echo "Notifying repository: $REPO"
+            RESPONSE=$(curl -s -w "%{http_code}" -o resp.json -X POST \
+              -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer ${{ secrets.REPO_DISPATCH_TOKEN }}" \
+              https://api.github.com/repos/$REPO/dispatches \
+              -d '{"event_type":"dependency-updated"}'
+            
+            if [ "$RESPONSE" = "204" ]; then
+              echo "* **[$REPO](https://github.com/$REPO/actions)**: ✅ Dispatched successfully (HTTP 204)" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "* **[$REPO](https://github.com/$REPO/actions)**: ❌ Failed to dispatch (HTTP $RESPONSE)" >> $GITHUB_STEP_SUMMARY
+              cat resp.json >> $GITHUB_STEP_SUMMARY
+            fi
+          done
